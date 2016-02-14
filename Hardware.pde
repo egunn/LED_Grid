@@ -6,7 +6,7 @@ Hardware hardware;
 class Hardware{
 
   Serial myPort;
-  int delayTime = 3;
+  int delayTime = 1;
   byte [] bytedata;
   int HWCols, HWRows;
   float Brightness = 0.2;
@@ -48,6 +48,7 @@ class Hardware{
     int numRows = min(pixelData[0].length,HWRows); //based on https://forum.processing.org/one/topic/getting-lengths-of-multidimensional-arrays.html
 
     //send out color data
+    bytedata = new byte[]{};
     for (int j = 0; j<numCols;j++){
       for (int i=0; i<numRows;i++){
         int r = (pixelData[i][j].col >> 16) & 0xFF;  // Faster way of getting red(pixelData[i][j].col)
@@ -59,24 +60,27 @@ class Hardware{
         r = (int)(Brightness * min(r,254));
         g = (int)(Brightness * min(g,254));
         b = (int)(Brightness * min(b,254));
-        bytedata = new byte[]{(byte)i,(byte)j,(byte)r,(byte)g,(byte)b,(byte)255};
-        myPort.write(bytedata); //<>//
-        delay(delayTime);
-      }
+        bytedata = concat(bytedata, new byte[]{(byte)i,(byte)j,(byte)r,(byte)g,(byte)b,(byte)255});
+      } //<>//
     }
+    //write all the data!
+    myPort.write(bytedata);
+    //delay(delayTime);
     
+    /*
     //now get any touch data that has shown up and store it in the pixelData
      while (myPort.available() > 0) {
        byte[] inBuffer = new byte[7];
       
         myPort.readBytesUntil((char)255,inBuffer);
-        /*
+        
+        
         //display raw buffer data
-        for(int i=0;i<inBuffer.length;i++){
-          print(inBuffer[i]);
-        }
-        println();
-        */
+        //for(int i=0;i<inBuffer.length;i++){
+        //  print(inBuffer[i]);
+        //}
+        //println();
+        
         
         //store buffer data in pixelData, if it has enough room
         int touchCol = inBuffer[0];
@@ -85,7 +89,7 @@ class Hardware{
         if ((touchCol <= HWCols) && (touchRow <= HWRows))
           pixelData[touchCol][touchRow].touch = isTouched;
     } 
-        
+        */
     
     return pixelData;
   }

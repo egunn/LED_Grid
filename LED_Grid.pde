@@ -1,6 +1,6 @@
 
 //make a global array of pixels
-Pixel [][] allThePixels = new Pixel[10][10];
+Pixel [][] allThePixels = new Pixel[15][15];
 Pixel [] animationPixel = new Pixel[1];
 
 int testX = 0;
@@ -11,8 +11,9 @@ int startPixelY = 0;
 
 //code runs once, on startup
 void setup() {
-  hardware = new Hardware(5,5);  // how many columns and rows there actually are.
+  hardware = new Hardware(15,15);  // how many columns and rows there actually are.
   hardware.printPorts(); //comment this line once you know which port you need
+  // set the second value of the next call to the [index] of the serial port you want to use. For Branden, typically 1, for Erica, typically 0
   hardware.init(this, 0); //which index to use from the printed port list.
   hardware.setBrightness(0.1);
   
@@ -27,8 +28,8 @@ void setup() {
   //initialize the animation pixel array
   animationPixel[0]=new Pixel(200,50,color(150,0,0),false);
   
-  size(501,501);
-  frameRate(5);
+  size(751,751);
+  frameRate(25);
 }
 
 //define Pixel class
@@ -67,7 +68,7 @@ void draw() {
   Pixel pixelStorage;
   
   //set edge detect variables for pixel animation
-   if (animationPixel[0].xPos > 400) {
+   if (animationPixel[0].xPos > 650) {
      testX = 1;
    }
    
@@ -75,7 +76,7 @@ void draw() {
      testX = 0;
    }
   
-   if (animationPixel[0].yPos > 400) {
+   if (animationPixel[0].yPos > 650) {
      testY = 1;
    }
    
