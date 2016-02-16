@@ -67,31 +67,38 @@ class Hardware{
     myPort.write(bytedata);
     //delay(delayTime);
     
-    /*
     //now get any touch data that has shown up and store it in the pixelData
-     while (myPort.available() > 0) {
-       byte[] inBuffer = new byte[7];
+    int bufferlength = 250;
+    char[] inBuffer = new char [bufferlength];
+    int in=0;
+    while (myPort.available() > 0) {
+      char c = myPort.readChar();
+      inBuffer[in] = c;  
+      in++;
       
-        myPort.readBytesUntil((char)255,inBuffer);
+      if (c == 255)
+        in=0;
         
-        
-        //display raw buffer data
-        //for(int i=0;i<inBuffer.length;i++){
-        //  print(inBuffer[i]);
-        //}
-        //println();
-        
-        
-        //store buffer data in pixelData, if it has enough room
-        int touchCol = inBuffer[0];
-        int touchRow = inBuffer[1];
-        boolean isTouched = (inBuffer[2]>0);
-        if ((touchCol <= HWCols) && (touchRow <= HWRows))
-          pixelData[touchCol][touchRow].touch = isTouched;
+      if (in == bufferlength)
+        break;
     } 
-        */
-    
-    return pixelData;
+
+    //for(int i=0;i<in;i++){
+      //display raw buffer data
+      //print(inBuffer[i]);
+    //}
+    //println();
+
+    for(int touchRow=0;touchRow<HWRows;touchRow++)
+    {
+      for(int touchCol=0;touchCol<HWCols;touchCol++)
+      {
+        boolean isTouched = (inBuffer[(touchRow*HWCols) + touchCol]=='1')?true:false;
+        pixelData[touchCol][touchRow].touch = isTouched;
+      }
+    }
+
+  return pixelData;
   }
   
 }
